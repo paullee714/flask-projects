@@ -1,0 +1,12 @@
+<h1>
+    login page
+</h1>
+
+<form action="/login" method="POST">
+    <input type="username" name="user_name" placeholder="Username">
+    <input type="password" name="password" placeholder="Password">
+    <input type="submit" value="Log in">
+</form>
+{% if data %}
+	<h3>{{data}}</h3>
+{% endif %}

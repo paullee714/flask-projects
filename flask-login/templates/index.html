@@ -1,0 +1,18 @@
+<h1>
+    index page
+</h1>
+
+{% if session['name'] %}
+   
+	{% if data %}
+	<h3>{{data}}</h3>
+	{% endif %}
+	<a href="/logout">Logout</a> <br> <br>
+
+{% else %}
+<p>Not login!</p>
+
+<a href="/login">Login</a> 
+<a href="/register">Register</a>
+
+{% endif %}
