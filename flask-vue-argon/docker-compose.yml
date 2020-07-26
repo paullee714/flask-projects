@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  frontend:
+    container_name: my-front
+    build:
+      context: frontend
+      dockerfile: front.dev.Dockerfile
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    volumes:
+      - ./frontend:/app
+
+  backend:
+    container_name: my-back
+    build:
+      context: backend
+      dockerfile: back.dev.Dockerfile
+    expose:
+      - 5000
+    ports:
+      - 5000:5000
+    volumes:
+    - ./backend:/www
