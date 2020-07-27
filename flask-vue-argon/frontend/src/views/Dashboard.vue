@@ -5,10 +5,13 @@
             <div class="row">
                 <div class="col-md-12">
                     <h1>My Test</h1>
-                    <button type="button" class="btn btn-success btn-sm">{{my_data}}</button>
+                    <button type="button" class="btn btn-success btn-sm" v-on:click="getRanStr">{{my_data}}</button>
                     <hr>
-
-
+                    <ul>
+                        <li v-for="(msg,index) in ran_str" :key="index">
+                            {{ msg.key }}
+                        </li>
+                    </ul>
                 </div>
 
                 <div class="col-xl-3 col-lg-6">
@@ -172,6 +175,7 @@
         data() {
             return {
                 my_data: '',
+                ran_str: [],
                 bigLineChart: {
                     allData: [
                         [0, 20, 10, 30, 15, 40, 20, 60, 60],
@@ -196,6 +200,16 @@
             };
         },
         methods: {
+            getRanStr(){
+                let path = "http://" + window.location.hostname + ":5000/main_btn";
+                axios.get(path).then((res) => {
+                    this.ran_str = res.data;
+                    console.log(res.data);
+                }).catch((error) => {
+                    console.error(error);
+                });
+
+            },
             getMyData(){
                 let path = "http://" + window.location.hostname + ":5000/";
                 axios.get(path).then((res) => {
