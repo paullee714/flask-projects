@@ -24,3 +24,5 @@ services:
       - 5000:5000
     volumes:
     - ./backend:/www
+    depends_on:
+      - frontend
