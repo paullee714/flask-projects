@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 
 from my_util.my_logger import my_logger
+from my_provider.baseball_scrapper import get_baseball_rank
 
 import os,string
 
@@ -43,6 +44,13 @@ def main_btn():
         data.append(result_dict)
 
     return jsonify(data)
+
+
+@app.route('/baseball_data',methods=['GET'])
+def new_data():
+    my_logger.info("baseball_data route!")
+    data_list = get_baseball_rank()
+    return jsonify(data_list)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=os.getenv('FLASK_RUN_PORT'),debug=os.getenv('FLASK_DEBUG'))
