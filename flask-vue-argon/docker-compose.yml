@@ -1,4 +1,4 @@
-version: '3.2'
+version: '3.7'
 
 services:
   frontend:
@@ -28,9 +28,10 @@ services:
       - frontend
 
   backend-db:
+    restart: always
     container_name: my-back-db
-    command: mysqld --default-authentication-plugin=mysql_native_password
-    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: "qwerqwer123"
       MYSQL_DATABASE: "fullstack_test"
@@ -41,6 +42,4 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - /Users/oliver/socar-dev/docker_db/fullstack_mysql:/var/lib/mysql
-    cap_add:
-      - SYS_NICE
+      - /Users/wool/Dev/db_data_docker/fullstack_mysql:/var/lib/mysql
