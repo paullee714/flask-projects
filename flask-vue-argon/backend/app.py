@@ -5,10 +5,9 @@ from flask_bcrypt import Bcrypt
 
 from my_util.my_logger import my_logger
 from my_provider.baseball_scrapper import get_baseball_rank
-from my_model.user_model import User
+from my_model import user_model
 
-import os,string
-import json
+import os, traceback
 
 # instantiate the app
 app = Flask(__name__)
@@ -36,27 +35,6 @@ def health_check():
     my_logger.info("health check route url!")
     return jsonify('good')
 
-@app.route('/main_btn',methods=['GET'])
-def main_btn():
-    my_logger.info("click Main Btn")
-    data = []
-    string_pool = string.ascii_lowercase
-    result_dict={}
-
-    for i in range(15):
-        result_val=''
-
-        for i in range(10):
-            import random
-            result_val += random.choice(string_pool)
-
-        result_dict['key'] = result_val
-
-        data.append(result_dict)
-
-    return jsonify(data)
-
-
 @app.route('/baseball_data',methods=['GET'])
 def new_data():
     my_logger.info("baseball_data route!")
@@ -75,17 +53,20 @@ def auth_login():
     bio = request.get_json().get('bio')
 
     try:
-        user_data = User.query.filter_by(username=username,userpwd=userpwd).first()
-        if user_data is not None:
-            my_logger.info("login success!")
-            session['name'] = True
-            return {'success':'user Login Success!'}
-        else:
-            my_logger.info("user does not exists....")
-            session['name'] = False
-            return {'success':'user does not exists.....'}
+        user_data = user_model.User.query.filter_by(username=username,userpwd=userpwd).all()
+        my_logger.info(user_data)
+        return ''
+        # if user_data is not None:
+        #     my_logger.info("login success!")
+        #     session['name'] = True
+        #     return {'success':'user Login Success!'}
+        # else:
+        #     my_logger.info("user does not exists....")
+        #     session['name'] = False
+        #     return {'success':'user does not exists.....'}
     except Exception as e:
-        my_logger.error(e)
+        # my_logger.error(traceback.print_exc(e))
+        my_logger.debug(e)
         session['login_session'] = False
         return {'error':'login Exception...'}
 
