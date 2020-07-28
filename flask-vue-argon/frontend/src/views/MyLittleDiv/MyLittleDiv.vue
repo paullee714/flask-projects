@@ -29,7 +29,7 @@
                             {{row.rank}} 위
                         </th>
                         <td>
-                            <img :src="row.img_url"> {{row.name}}
+                            <img :src='row.img_url'> {{row.name}}
                         </td>
                         <td>
                             {{row.total_cnt}}
@@ -78,7 +78,6 @@
                 let path = "http://" + window.location.hostname + ":5000/baseball_data";
                 axios.get(path).then((res) => {
                     this.new_data = res.data;
-                    console.log(res.data);
                 }).catch((error) => {
                     console.error(error);
                 });
