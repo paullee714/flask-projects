@@ -84,6 +84,7 @@
                     if (decode_user.identity == this.userInfo.username) {
                         alert(this.userInfo.username + " 님, 반갑습니다!")
                         document.cookie = 'login-token' + '=' + res.data.token
+                        this.$router.push("/")
                     }
 
                     // if(this.userInfo.username == )
