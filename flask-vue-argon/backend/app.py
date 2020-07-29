@@ -1,13 +1,17 @@
-from flask import Flask, jsonify, request,session
+from flask import Flask, jsonify, request,session, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager
 
 from my_util.my_logger import my_logger
 from my_provider.baseball_scrapper import get_baseball_rank
 from my_model import user_model
 
 import os, traceback
+import datetime
+
+from flask_jwt_extended import create_access_token,set_access_cookies
 
 # instantiate the app
 app = Flask(__name__)
@@ -15,13 +19,18 @@ app.secret_key = 'laksdjfoiawjewfansldkfnzcvjlzskdf'
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+app.config['JWT_COOKIE_CSRF_PROTECT']=os.getenv('JWT_COOKIE_CSRF_PROTECT')
+app.config['JWT_COOKIE_SECURE']=os.getenv('JWT_COOKIE_SECURE')
+
 db = SQLAlchemy()
 db.init_app(app)
 
 # enable CORS
-CORS(app, resources={r'/*': {'origins': '*'}})
+CORS(app, resources={r'/*': {'origins': '*'}},supports_credentials=True)
 
 bcrypt = Bcrypt(app)
+jwt = JWTManager(app)
 
 # sanity check route
 @app.route('/', methods=['GET'])
@@ -89,24 +98,29 @@ def auth_login():
         user_data = my_user.query.filter_by(username=username).first()
 
         if user_data is not None:
-            my_logger.info(user_data.userpwd)
             auth = user_data.check_password(userpwd)
             if not auth:
                 my_logger.info("password validation fail!")
-                return {'success': 'password validation fail'}
+                return {'status': 'fail'},401
             else:
                 my_logger.info("login success!")
-                session['login'] = True
-                return {'success': 'user Login Success!'}
+                # session['login'] = True
+                # return {'success': session['login']},200
+                expire = datetime.timedelta(minutes=5)
+                my_token = create_access_token(identity=username, expires_delta=expire)
+                my_logger.info(my_token)
+                # resp = jsonify({'login':True})
+                # set_access_cookies(resp,my_token)
+                return {'token':my_token,'status':'success'},200
         else:
             my_logger.info("user information is wrong or user does  not exists....")
-            session['login'] = False
-            return {'success': 'user information is wrong or user does  not exists....'}
+            # session['login'] = False
+            return {'status': 'fail'},401
     except Exception as e:
         my_logger.error("login Exception...")
         my_logger.debug(traceback.print_exc(e))
-        session['login_session'] = False
-        return {'fail': 'login Exception...'}
+
+        return {'status': 'fail'},404
 
 
 @app.route('/api/auth/logout')
