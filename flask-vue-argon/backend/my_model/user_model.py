@@ -2,7 +2,6 @@
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 
-from my_util.my_logger import my_logger
 
 db = SQLAlchemy()
 
@@ -23,5 +22,4 @@ class User(db.Model):
         self.userpwd = generate_password_hash(self.userpwd).decode('utf8')
 
     def check_password(self,password):
-        my_logger.info(self.username)
         return check_password_hash(self.userpwd,password)
