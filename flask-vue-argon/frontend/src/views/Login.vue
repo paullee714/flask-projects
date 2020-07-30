@@ -55,7 +55,7 @@
 </template>
 <script>
     import axios from 'axios';
-    import jwt_decode from 'jwt-decode';
+    // import jwt_decode from 'jwt-decode';
 
     // var jwtDecode = require('jwt-decode')
     export default {
@@ -69,24 +69,13 @@
             }
         },
         methods: {
-            setCookie(cookie_name, cookie) {
-                var cookie_value = cookie_name + '=' + cookie;
-                document.cookie = cookie_value;
-            },
             makeLogin() {
-                let path = "http://" + window.location.hostname + ":5000/api/auth/login";
+                let path = "http://" + window.location.hostname + ":5000/api2/auth/login";
                 axios.post(path, {
                     username: this.userInfo.username,
                     userpwd: this.userInfo.userpwd
-                }, {withCredential: true}).then((res) => {
-                    // document.cookie = 'login-token' + '=' + res.data.token
-                    let decode_user = jwt_decode(res.data.token)
-                    if (decode_user.identity == this.userInfo.username) {
-                        alert(this.userInfo.username + " 님, 반갑습니다!")
-                        document.cookie = 'login-token' + '=' + res.data.token
-                        this.$router.push("/")
-                    }
-
+                }, {withCredential: true}).then(() => {
+                    this.$router.push("/")
                     // if(this.userInfo.username == )
                 }).catch((error) => {
                     console.log(error);

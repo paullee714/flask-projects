@@ -9,9 +9,11 @@ from my_provider.baseball_scrapper import get_baseball_rank
 from my_model import user_model
 
 import os, traceback
-import datetime
 
-from flask_jwt_extended import create_access_token,set_access_cookies
+from my_router.api.auth import auth_route
+from my_router.api.tweet import tweet_route
+
+from my_util.auth_util import token_required
 
 # instantiate the app
 app = Flask(__name__)
@@ -20,17 +22,22 @@ app.secret_key = 'laksdjfoiawjewfansldkfnzcvjlzskdf'
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-app.config['JWT_COOKIE_CSRF_PROTECT']=os.getenv('JWT_COOKIE_CSRF_PROTECT')
-app.config['JWT_COOKIE_SECURE']=os.getenv('JWT_COOKIE_SECURE')
+app.config['JWT_COOKIE_CSRF_PROTECT'] = os.getenv('JWT_COOKIE_CSRF_PROTECT')
+app.config['JWT_COOKIE_SECURE'] = os.getenv('JWT_COOKIE_SECURE')
+app.config['SECRET_KEY'] = 'qwersdaiofjhoqwihlzxcjvjl'
 
 db = SQLAlchemy()
 db.init_app(app)
 
 # enable CORS
-CORS(app, resources={r'/*': {'origins': '*'}},supports_credentials=True)
+CORS(app, resources={r'/*': {'origins': '*'}}, supports_credentials=True)
 
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
+
+app.register_blueprint(auth_route, url_prefix='/api2/auth')
+app.register_blueprint(tweet_route, url_prefix='/api2/board')
+
 
 # sanity check route
 @app.route('/', methods=['GET'])
@@ -104,22 +111,14 @@ def auth_login():
                 return {'status': 'fail'},401
             else:
                 my_logger.info("login success!")
-                # session['login'] = True
-                # return {'success': session['login']},200
-                expire = datetime.timedelta(minutes=5)
-                my_token = create_access_token(identity=username, expires_delta=expire)
-                my_logger.info(my_token)
-                # resp = jsonify({'login':True})
-                # set_access_cookies(resp,my_token)
-                return {'token':my_token,'status':'success'},200
+                session['login'] = True
+                return {'success': session['login']}, 200
         else:
             my_logger.info("user information is wrong or user does  not exists....")
-            # session['login'] = False
             return {'status': 'fail'},401
     except Exception as e:
         my_logger.error("login Exception...")
         my_logger.debug(traceback.print_exc(e))
-
         return {'status': 'fail'},404
 
 
