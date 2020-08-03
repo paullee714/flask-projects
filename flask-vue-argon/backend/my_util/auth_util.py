@@ -26,7 +26,7 @@ def token_required(f):
         try:
             token = auth_headers[1]
             data = jwt.decode(token, 'qwersdaiofjhoqwihlzxcjvjl')
-            parse_name = data['sub'].split('/')[0]
+            parse_name = data['sub']
             user = User.query.filter_by(username=parse_name).first()
             if not user:
                 raise RuntimeError('User not found')

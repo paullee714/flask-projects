@@ -76,35 +76,27 @@
         methods: {
             getNewData() {
                 let path = "http://" + window.location.hostname + ":5000/baseball_data";
-                let cname = this.getCookie("login-token")
-                let config = {
-                    headers: {
-                        "Authorization": 'Bearer' + cname
-                    }
-                };
-                console.log(config)
-                axios.defaults.headers.common['login-token'] = cname;
-                axios.get(path, config).then((res) => {
+                axios.get(path).then((res) => {
                     this.new_data = res.data;
                 }).catch((error) => {
                     console.error(error);
                 });
             },
-            getCookie(cname) {
-                var name = cname + "=";
-                var decodedCookie = decodeURIComponent(document.cookie);
-                var ca = decodedCookie.split(';');
-                for (var i = 0; i < ca.length; i++) {
-                    var c = ca[i];
-                    while (c.charAt(0) == ' ') {
-                        c = c.substring(1);
-                    }
-                    if (c.indexOf(name) == 0) {
-                        return c.substring(name.length, c.length);
-                    }
-                }
-                return "";
-            }
+            // getCookie(cname) {
+            //     var name = cname + "=";
+            //     var decodedCookie = decodeURIComponent(document.cookie);
+            //     var ca = decodedCookie.split(';');
+            //     for (var i = 0; i < ca.length; i++) {
+            //         var c = ca[i];
+            //         while (c.charAt(0) == ' ') {
+            //             c = c.substring(1);
+            //         }
+            //         if (c.indexOf(name) == 0) {
+            //             return c.substring(name.length, c.length);
+            //         }
+            //     }
+            //     return "";
+            // }
         },
         created() {
             this.getNewData();

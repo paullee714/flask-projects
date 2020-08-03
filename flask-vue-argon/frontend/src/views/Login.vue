@@ -55,9 +55,7 @@
 </template>
 <script>
     import axios from 'axios';
-    // import jwt_decode from 'jwt-decode';
 
-    // var jwtDecode = require('jwt-decode')
     export default {
         name: 'login',
         data() {
@@ -74,7 +72,9 @@
                 axios.post(path, {
                     username: this.userInfo.username,
                     userpwd: this.userInfo.userpwd
-                }, {withCredential: true}).then(() => {
+                }, {withCredential: true}).then((res) => {
+                    console.log(res.data)
+                    localStorage.token = res.data.token
                     this.$router.push("/")
                     // if(this.userInfo.username == )
                 }).catch((error) => {

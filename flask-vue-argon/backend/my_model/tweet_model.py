@@ -21,5 +21,6 @@ class Tweet(db.Model):
         return dict(id=self.id,
                     title=self.title,
                     words=self.words,
+                    creator=self.creator,
                     created_at=self.created_at,
                     updated_at=self.updated_at)

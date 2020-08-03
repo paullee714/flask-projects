@@ -60,12 +60,13 @@ def login():
 
         my_logger.info("User Authentication token setting")
         token = jwt.encode({
-            'sub': user_data.username + "/" + str(user_data.id),
+            'sub': user_data.username,
             'iat': datetime.datetime.utcnow(),
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
         }, 'qwersdaiofjhoqwihlzxcjvjl')
 
         my_logger.info("Set up Success")
+        my_logger.debug(token.decode('UTF-8'))
         return jsonify({"token": token.decode('UTF-8')})
     else:
         my_logger.error("User Does Not Exist")

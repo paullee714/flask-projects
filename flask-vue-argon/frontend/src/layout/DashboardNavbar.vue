@@ -20,7 +20,7 @@
                   <img alt="Image placeholder" src="img/theme/team-4-800x800.jpg">
                 </span>
                         <div class="media-body ml-2 d-none d-lg-block">
-                            <span class="mb-0 text-sm  font-weight-bold">Jessica Jones</span>
+                            <span class="mb-0 text-sm  font-weight-bold">{{ username }}</span>
                         </div>
                     </div>
 
@@ -45,10 +45,12 @@
                             <span>Support</span>
                         </router-link>
                         <div class="dropdown-divider"></div>
-                        <router-link to="/profile" class="dropdown-item">
-                            <i class="ni ni-user-run"></i>
-                            <span>Logout</span>
-                        </router-link>
+                        <a v-on:click="makelogout">
+                            <router-link to="/" class="dropdown-item">
+                                <i class="ni ni-user-run"></i>
+                                <span>Logout</span>
+                            </router-link>
+                        </a>
                     </template>
                 </base-dropdown>
             </li>
@@ -56,24 +58,40 @@
     </base-nav>
 </template>
 <script>
-  export default {
-    data() {
-      return {
-        activeNotifications: false,
-        showMenu: false,
-        searchQuery: ''
-      };
-    },
-    methods: {
-      toggleSidebar() {
-        this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
-      },
-      hideSidebar() {
-        this.$sidebar.displaySidebar(false);
-      },
-      toggleMenu() {
-        this.showMenu = !this.showMenu;
-      }
-    }
-  };
+    import isValidJwt from '../utils'
+
+    export default {
+        data() {
+            return {
+                username: '',
+                activeNotifications: false,
+                showMenu: false,
+                searchQuery: ''
+            };
+        },
+        methods: {
+            makelogout() {
+                localStorage.removeItem('token');
+                location.reload();
+            },
+            isAuthenticated() {
+                if (isValidJwt()) {
+                    let data = JSON.parse(atob(localStorage.token.split('.')[1]))
+                    this.username = data.sub
+                }
+            },
+            toggleSidebar() {
+                this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
+            },
+            hideSidebar() {
+                this.$sidebar.displaySidebar(false);
+            },
+            toggleMenu() {
+                this.showMenu = !this.showMenu;
+            }
+        },
+        created() {
+            this.isAuthenticated()
+        }
+    };
 </script>

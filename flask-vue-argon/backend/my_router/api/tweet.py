@@ -11,7 +11,8 @@ tweet_route = Blueprint('tweet_route', __name__)
 
 
 @tweet_route.route('/tweet', methods=["GET"])
-def tweet_list():
+@token_required
+def tweet_list(current_user):
     my_logger.info("get Tweet List")
     tweet_list = tweet_model.Tweet.query.all()
     return jsonify([t.to_dict() for t in tweet_list])
