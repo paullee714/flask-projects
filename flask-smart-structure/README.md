@@ -1,10 +1,5 @@
 # Flask 스마트한 구조 만들기
-
-Created: Mar 8, 2021 12:11 PM
-Created By: wool dev
-Last Edited Time: Mar 9, 2021 12:09 AM
-Status: 작성완료
-Type: Flask
+- 블로그 링크 Link [https://woolbro.tistory.com/120]
 
 # Flask 스마트하게 구조 만들기!
 
