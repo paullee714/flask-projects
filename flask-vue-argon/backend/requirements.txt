@@ -6,7 +6,7 @@ chardet==3.0.4
 click==7.1.2
 Flask==1.1.2
 Flask-Bcrypt==0.7.1
-Flask-Cors==3.0.8
+Flask-Cors==3.0.9
 Flask-JWT-Extended==3.24.1
 Flask-Login==0.5.0
 flask-sqlacodegen==1.1.7
