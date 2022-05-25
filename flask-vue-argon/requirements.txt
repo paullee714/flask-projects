@@ -19,7 +19,7 @@ itsdangerous==1.1.0
 Jinja2==2.11.2
 MarkupSafe==1.1.1
 pycparser==2.20
-PyJWT==1.7.1
+PyJWT==2.4.0
 PyMySQL==0.9.3
 python-dotenv==0.14.0
 pytz==2020.1
